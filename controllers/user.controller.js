@@ -63,7 +63,7 @@ const signin = async (req, res) => {
     if (!Object.keys(userExist).length) {
       const hashedPass = await bcrypt.hash(password, 10);
 
-      const user = await redisClient.hset(
+      await redisClient.hset(
         `user:${key}`,
         `email`,
         `${email}`,
@@ -75,7 +75,7 @@ const signin = async (req, res) => {
     }
 
     const accessToken = await jsonwebtoken.sign(
-      { email, password },
+      { email },
       "process.env.ACCESS_TOKEN_SECRET",
       { expiresIn: "1d" }
     );
@@ -112,11 +112,17 @@ const signin = async (req, res) => {
 
 const currentUser = async (req, res) => {
   try {
-    if (!req.user) throw new ApiError(401, "unauthorized user");
+    if (!req.email) throw new ApiError(401, "unauthorized user");
 
-    const user = await redisClient.hget();
+    key = `user:${req.email.split("@gmail.com")[0]}`;
+    console.log(key);
+
+    const user = await redisClient.hgetall(key);
+    console.log(user);
 
     if (!user) throw new ApiError(404, "user not found");
+
+    delete user["password"];
 
     return res
       .status(200)
@@ -137,7 +143,7 @@ const currentUser = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  if (!req.user) return res.status(401).send("unauthorized user");
+  if (!req.email) return res.status(401).send("unauthorized user");
 
   return res
     .status(200)
@@ -150,4 +156,5 @@ module.exports = {
   signin,
   currentUser,
   logout,
+  redisClient,
 };

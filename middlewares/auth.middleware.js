@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { ApiError } = require("../utils/ApiError.utils");
+const { redisClient } = require("../controllers/user.controller");
 
 const auth = async (req, res, next) => {
   try {
@@ -17,17 +18,17 @@ const auth = async (req, res, next) => {
     if (tokenData?.exp && tokenData.exp < Date.now() / 1000)
       throw new ApiError(401, "token has been expired");
 
-    if (!tokenData || !tokenData?._id)
-      throw new ApiError(401, "invalid user creds");
-
     // const user = await User.findById(tokenData?._id);
+    const email = await redisClient.hgetall(
+      `user:${tokenData.email.split("@gmail.com")[0]}`
+    );
 
-    if (!user) throw new ApiError(404, "user not found, try logging-in");
+    if (!email) throw new ApiError(404, "user not found, try logging-in");
 
-    req.user = user;
+    req.email = email.email;
     next();
   } catch (error) {
-    console.error("error occured :", error?.message);
+    console.error("error occured during auth :", error?.message);
 
     return res
       .status(error?.statusCode || 401)

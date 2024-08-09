@@ -2,6 +2,7 @@ const app = require("express")();
 const cors = require("cors");
 const { json, urlencoded } = require("express");
 const userRouter = require("./routes/user.router");
+const notesRouter = require("./routes/notes.router");
 
 app.use(cors({ origin: "*" }));
 app.use(json());
@@ -12,5 +13,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", userRouter.router);
+app.use("/user/notes", notesRouter.router);
 
 app.listen(8080, () => console.log("server running on port 8080"));
