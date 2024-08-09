@@ -20,8 +20,6 @@ const signup = async (req, res) => {
     if (!name || !email || !password)
       throw new Error("name or email or password not sent");
 
-    const hashedPass = await bcrypt.hash(password, 10);
-
     let userid = `user:${Date.now()}`;
 
     console.log("signup");
@@ -56,10 +54,40 @@ const signup = async (req, res) => {
 
 const signin = async (req, res) => {
   try {
+    console.log("signin");
     const { email, password } = req.body;
 
     if (!email || !password)
       throw new ApiError(400, "email and password are required");
+
+    let key = email.split("@gmail.com");
+    key = key[0];
+    console.log(key);
+
+    let userExist = await redisClient.hgetall(`user:${key}`);
+    console.log(Object.keys(userExist).length);
+
+    if (!Object.keys(userExist).length) {
+      console.log("usernotexists");
+      const hashedPass = await bcrypt.hash(password, 10);
+
+      console.log(hashedPass);
+
+      const user = await redisClient.hset(
+        `user:${key}`,
+        `email`,
+        `${email}`,
+        `password`,
+        `${hashedPass}`
+      );
+      console.log(user);
+
+      userExist = await redisClient.hgetall(`user:${key}`);
+      console.log(userExist);
+    }
+
+    console.log("userExist", userExist);
+    return res.status(200).send(userExist);
 
     // look for doc with email if found then compare password with hashed else create new one
     // create accesstoken token and send it with login
