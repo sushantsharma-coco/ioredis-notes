@@ -114,7 +114,7 @@ const getAllNotes = async (req, res) => {
   }
 };
 
-const updateSingleNote = async (req, res) => {
+const updateNote = async (req, res) => {
   try {
     const { title } = req.params;
 
@@ -155,4 +155,39 @@ const updateSingleNote = async (req, res) => {
   }
 };
 
-module.exports = { createNotes, getSingleNote, getAllNotes, updateSingleNote };
+const deleteNote = async (req, res) => {
+  try {
+    const { title } = req.params;
+
+    const key = `notes:${req.email.split("@gmail.com")[0]}:${title}`;
+    console.log(key);
+
+    const note = await redisClient.hdel(key, "title", "content", "color");
+
+    if (note == 0) throw new ApiError(404, "note not found to delete");
+
+    return res
+      .status(200)
+      .send(new ApiResponse(204, note, "note deleted successfully"));
+  } catch (error) {
+    console.error("error occured :", error?.message);
+
+    return res
+      .status(error?.statusCode || 500)
+      .send(
+        new ApiError(
+          error?.statusCode || 500,
+          error?.message || "unauthorised user",
+          error?.errors
+        )
+      );
+  }
+};
+
+module.exports = {
+  createNotes,
+  getSingleNote,
+  getAllNotes,
+  updateNote,
+  deleteNote,
+};
