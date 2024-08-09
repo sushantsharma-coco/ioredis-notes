@@ -54,8 +54,58 @@ const signup = async (req, res) => {
   }
 };
 
+const signin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password)
+      throw new ApiError(400, "email and password are required");
+
+    // look for doc with email if found then compare password with hashed else create new one
+    // create accesstoken token and send it with login
+  } catch (error) {
+    console.error("error occured :", error?.message);
+
+    return res
+      .status(error?.statusCode || 500)
+      .send(
+        new ApiError(
+          error?.statusCode || 500,
+          error?.message || "unauthorised user",
+          error?.errors
+        )
+      );
+  }
+};
+
+const currentUser = async (req, res) => {
+  try {
+    if (!req.user) throw new ApiError(401, "unauthorized user");
+
+    const user = await redisClient.hget();
+
+    if (!user) throw new ApiError(404, "user not found");
+
+    return res
+      .status(200)
+      .send(new ApiResponse(200, user, "user fetched successfully"));
+  } catch (error) {
+    console.error("error occured :", error?.message);
+
+    return res
+      .status(error?.statusCode || 500)
+      .send(
+        new ApiError(
+          error?.statusCode || 500,
+          error?.message || "unauthorised user",
+          error?.errors
+        )
+      );
+  }
+};
+
 const logout = async (req, res) => {
-  if (!req.user) throw new Error("unauthorised user");
+  if (!req.user) return res.status(401).send("unauthorized user");
 
   return res
     .status(200)
@@ -65,4 +115,7 @@ const logout = async (req, res) => {
 
 module.exports = {
   signup,
+  signin,
+  currentUser,
+  logout,
 };

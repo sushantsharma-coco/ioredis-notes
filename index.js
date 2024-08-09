@@ -1,7 +1,9 @@
 const app = require("express")();
+const cors = require("cors");
 const { json, urlencoded } = require("express");
 const userRouter = require("./routes/user.router");
 
+app.use(cors({ origin: "*" }));
 app.use(json());
 app.use(urlencoded({ extended: true }));
 
