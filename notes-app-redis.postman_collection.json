@@ -1,0 +1,271 @@
+{
+	"info": {
+		"_postman_id": "0df7da64-41a8-4be5-a2af-af7c77ab473c",
+		"name": "notes-app-redis",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36994773"
+	},
+	"item": [
+		{
+			"name": "sign - in",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"sushant\",\r\n    \"email\":\"sushant@gmail.com\",\r\n    \"password\":\"susPass\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user/sign-up",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"sign-up"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get current user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNzIzMjAxNzQyLCJleHAiOjE3MjMyODgxNDJ9.FIx2Cy-vKh52oOt1adRX_h-PyTyL4CqMlgcjjIfPMpw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/user",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create-notes",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNzIzMjAxNzQyLCJleHAiOjE3MjMyODgxNDJ9.FIx2Cy-vKh52oOt1adRX_h-PyTyL4CqMlgcjjIfPMpw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\":\"maharanasa 12223mmm\",\r\n    \"content\":\"maharana pratap singh 12223mmm\",\r\n    \"color\":\"kesari / orange / 12223mmm\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user/notes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"notes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create-notes Copy",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNzIzMjAxNzQyLCJleHAiOjE3MjMyODgxNDJ9.FIx2Cy-vKh52oOt1adRX_h-PyTyL4CqMlgcjjIfPMpw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\":\"ranasa\",\r\n    \"content\":\"maharana pratap of chittorgarh\",\r\n    \"color\":\"kesari/saffron\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user/notes/ranasa",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"notes",
+						"ranasa"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create-notes Copy 2",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNzIzMjAxNzQyLCJleHAiOjE3MjMyODgxNDJ9.FIx2Cy-vKh52oOt1adRX_h-PyTyL4CqMlgcjjIfPMpw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\":\"ranasa\",\r\n    \"content\":\"maharana pratap\",\r\n    \"color\":\"kesari\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user/notes/maharanasa 12223",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"notes",
+						"maharanasa 12223"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get single note",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNzIzMjAxNzQyLCJleHAiOjE3MjMyODgxNDJ9.FIx2Cy-vKh52oOt1adRX_h-PyTyL4CqMlgcjjIfPMpw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\":\"ranasa\",\r\n    \"content\":\"maharana pratap\",\r\n    \"color\":\"kesari\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user/notes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"notes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all notes",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiaWF0IjoxNzIzMjAxNzQyLCJleHAiOjE3MjMyODgxNDJ9.FIx2Cy-vKh52oOt1adRX_h-PyTyL4CqMlgcjjIfPMpw",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\":\"ranasa\",\r\n    \"content\":\"maharana pratap\",\r\n    \"color\":\"kesari\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/user/notes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"notes"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

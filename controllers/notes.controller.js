@@ -83,6 +83,8 @@ const getAllNotes = async (req, res) => {
     let userkey = `user:${req.email.split("@gmail.com")[0]}`;
 
     let notes = await redisClient.hget(userkey, "notes");
+    if (!notes.length) throw new ApiError(404, "no notes found");
+
     notes = notes.split(",");
 
     let notesArr = [];
@@ -153,15 +155,21 @@ const deleteNote = async (req, res) => {
     const { title } = req.params;
 
     const key = `notes:${req.email.split("@gmail.com")[0]}:${title}`;
-    console.log(key);
+    const userkey = `user:${req.email.split("@gmail.com")[0]}`;
 
-    const note = await redisClient.hdel(key, "title", "content", "color");
+    await redisClient.hdel(key, "title", "content", "color");
 
-    if (note == 0) throw new ApiError(404, "note not found to delete");
+    let notes = await redisClient.hget(userkey, "notes");
+    if (notes.length) notes = notes?.split(",");
+
+    notes = notes.filter((e) => e !== title);
+    notes = notes.join(",");
+
+    let user = await redisClient.hset(userkey, "notes", notes);
 
     return res
       .status(200)
-      .send(new ApiResponse(204, note, "note deleted successfully"));
+      .send(new ApiResponse(204, user, "note deleted successfully"));
   } catch (error) {
     console.error("error occured :", error?.message);
 
