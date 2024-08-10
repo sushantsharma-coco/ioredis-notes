@@ -24,6 +24,12 @@ const createNotes = async (req, res) => {
 
     if (note == 0) throw new ApiError(409, "note with title already exists");
 
+    let userkey = `user:${req.email.split("@gmail.com")[0]}`;
+    let notes = await redisClient.hget(userkey, "notes");
+
+    if (!notes) await redisClient.hset(userkey, "notes", title);
+    else await redisClient.hset(userkey, "notes", notes + "," + title);
+
     return res
       .status(201)
       .send(new ApiResponse(201, note, "note created successfully"));
@@ -73,32 +79,22 @@ const getSingleNote = async (req, res) => {
 
 const getAllNotes = async (req, res) => {
   try {
-    let pattern = `notes:${req.email.split("@gmail.com")[0]}`;
-    console.log(pattern);
-    let cursor = "0";
-    const notes = [];
+    let noteKey = `notes:${req.email.split("@gmail.com")[0]}`;
+    let userkey = `user:${req.email.split("@gmail.com")[0]}`;
 
-    do {
-      // Use SCAN to iterate over keys
-      const result = await redisClient.scan(cursor, "MATCH", pattern);
-      console.log("result", result);
-      cursor = result[0];
-      console.log("cursor", cursor);
-      const keys = result[1];
-      console.log("keys", keys);
+    let notes = await redisClient.hget(userkey, "notes");
+    notes = notes.split(",");
 
-      if (keys.length) {
-        // Fetch all notes at once
-        const notesData = await redisClient.mget(keys);
-        notes.push(...notesData);
-      }
-    } while (cursor !== "0");
+    let notesArr = [];
 
-    console.log(notes);
+    for (let i = 0; i < notes.length; i++) {
+      let note = await redisClient.hgetall(noteKey + ":" + notes[i]);
+      if (Object.keys(note).length) notesArr.push(note);
+    }
 
     return res
       .status(200)
-      .send(new ApiResponse(200, notes, "all notes fetched successfully"));
+      .send(new ApiResponse(200, notesArr, "all notes fetched successfully"));
   } catch (error) {
     console.error("error occured :", error?.message);
 
@@ -133,9 +129,6 @@ const updateNote = async (req, res) => {
       "color",
       color
     );
-    console.log(note);
-
-    if (note == 0) throw new ApiError(409, "note already exists");
 
     return res
       .status(200)
