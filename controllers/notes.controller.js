@@ -83,7 +83,8 @@ const getAllNotes = async (req, res) => {
     let userkey = `user:${req.email.split("@gmail.com")[0]}`;
 
     let notes = await redisClient.hget(userkey, "notes");
-    if (!notes.length) throw new ApiError(404, "no notes found");
+    if (notes == undefined || !notes.length)
+      throw new ApiError(404, "no notes found");
 
     notes = notes.split(",");
 
@@ -160,6 +161,10 @@ const deleteNote = async (req, res) => {
     await redisClient.hdel(key, "title", "content", "color");
 
     let notes = await redisClient.hget(userkey, "notes");
+
+    if (!notes || notes == undefined)
+      throw new ApiError(400, "empty notes/notes not found");
+
     if (notes.length) notes = notes?.split(",");
 
     notes = notes.filter((e) => e !== title);
