@@ -6,7 +6,14 @@ const createNotes = async (req, res) => {
   try {
     const { title, content, color } = req.body;
 
-    if (!title || !content || !color)
+    if (
+      !title ||
+      !content ||
+      !color ||
+      content == "" ||
+      color == "" ||
+      title == ""
+    )
       throw new ApiError(400, "all fields are required");
 
     const key = `notes:${req.email.split("@gmail.com")[0]}:${title}`;
@@ -119,7 +126,7 @@ const updateNote = async (req, res) => {
 
     const { content, color } = req.body;
 
-    if (!content && !color)
+    if (!content || !color)
       throw new ApiError(400, "content and color required to update");
 
     const key = `notes:${req.email.split("@gmail.com")[0]}:${title}`;
@@ -163,7 +170,7 @@ const deleteNote = async (req, res) => {
     let notes = await redisClient.hget(userkey, "notes");
 
     if (!notes || notes == undefined)
-      throw new ApiError(400, "empty notes/notes not found");
+      throw new ApiError(400, "empty notes/notes not founds");
 
     if (notes.length) notes = notes?.split(",");
 
